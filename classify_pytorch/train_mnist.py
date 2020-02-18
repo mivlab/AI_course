@@ -9,6 +9,7 @@ from torch.utils.data import DataLoader
 
 from dataloader import mnist_loader as ml
 from models.cnn import Net
+from toonnx import to_onnx
 
 
 parser = argparse.ArgumentParser(description='PyTorch MNIST Example')
@@ -91,10 +92,10 @@ def train():
         print('Val Loss: %.6f, Acc: %.3f' % (eval_loss / (math.ceil(len(val_data)/args.batch_size)),
                                              eval_acc / (len(val_data))))
         # save model --------------------------------
-        if (epoch + 1) % 10 == 0:
+        if (epoch + 1) % 1 == 0:
             # torch.save(model, 'output/model_' + str(epoch+1) + '.pth')
             torch.save(model.state_dict(), 'output/params_' + str(epoch + 1) + '.pth')
-
+            #to_onnx(model, 3, 28, 28, 'params.onnx')
 
 if __name__ == '__main__':
     train()
