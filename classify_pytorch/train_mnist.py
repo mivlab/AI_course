@@ -16,7 +16,7 @@ parser = argparse.ArgumentParser(description='PyTorch MNIST Example')
 parser.add_argument('--datapath', required=True, help='data path')
 parser.add_argument('--batch_size', type=int, default=256, help='training batch size')
 parser.add_argument('--epochs', type=int, default=30, help='number of epochs to train')
-parser.add_argument('--use_cuda', default=True, help='using CUDA for training')
+parser.add_argument('--use_cuda', default=False, help='using CUDA for training')
 
 args = parser.parse_args()
 args.cuda = args.use_cuda and torch.cuda.is_available()
