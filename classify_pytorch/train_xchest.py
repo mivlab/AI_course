@@ -8,7 +8,8 @@ import os
 from torch.utils.data import DataLoader
 
 from dataloader import mnist_loader as ml
-from models.cnn import Net224
+from models.cnn import Net
+from models.cnn import Net112
 import csv
 
 parser = argparse.ArgumentParser(description='PyTorch MNIST Example')
@@ -39,14 +40,14 @@ def train():
     train_loader = DataLoader(dataset=train_data, batch_size=args.batch_size, shuffle=True)
     val_loader = DataLoader(dataset=val_data, batch_size=args.batch_size)
 
-    model = Net224()
-    #model = models.resnet18(num_classes=10)  # 调用内置模型
+    model = Net112()
+    #model = models.resnet18(num_classes=4)  # 调用内置模型
     #model.load_state_dict(torch.load('./output/params_10.pth'))
 
     if args.cuda:
         print('training with cuda')
         model.cuda()
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=1e-3)
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.005, weight_decay=1e-4)
     scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, [10, 20], 0.1)
     loss_func = nn.CrossEntropyLoss()
 
