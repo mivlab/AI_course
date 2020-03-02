@@ -26,7 +26,7 @@ if args.cuda:
 
 def train():
     os.makedirs('./output', exist_ok=True)
-    if not os.path.exists('output/total.txt'):
+    if True: #not os.path.exists('output/total.txt'):
         ml.image_list(args.datapath, 'output/total.txt')
         ml.shuffle_split('output/total.txt', 'output/train.txt', 'output/val.txt')
 

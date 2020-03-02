@@ -27,7 +27,7 @@ if args.cuda:
 def train():
     os.makedirs('./output', exist_ok=True)
     f = open('output/total.txt', 'wt')
-    with open(r'D:\data\xray_chest\dataset\trainset\train.csv') as csvfile:
+    with open('train.csv') as csvfile:
         reader = csv.reader(csvfile)
         for i, line in enumerate(reader):
             if i > 0:
