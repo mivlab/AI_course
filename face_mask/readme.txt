@@ -5,7 +5,7 @@
 1）github上下载 Ultra-Light-Fast-Generic-Face-Detector-1MB代码
 https://github.com/Linzaer/Ultra-Light-Fast-Generic-Face-Detector-1MB
 2）把run_video_face_detect_mask.py， cnn.py， params_25.pth 三个文件复制到Ultra-Light-Fast-Generic-Face-Detector-1MB代码目录下
-3）运行run_video_face_detect_mask.py 即可实现佩戴口罩演示效果，显示笔记本电脑实时画面。
+3）运行Ultra-Light-Fast-Generic-Face-Detector-1MB下的run_video_face_detect_mask.py 即可实现佩戴口罩演示效果，显示笔记本电脑实时画面。
 
 
 附：文件介绍
