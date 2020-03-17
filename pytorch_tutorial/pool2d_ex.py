@@ -8,7 +8,7 @@ pool1 = nn.MaxPool2d(2)
 #pool1 = nn.AvgPool2d(2)
 net = nn.Sequential(pool1)
 
-# RBG数据，格式为chw, 3x4x4
+# RGB数据，格式为chw, 3x4x4
 data = np.array([[[200, 200, 10, 10],
                    [200, 201, 13, 10],
                    [200, 209, 10, 14],

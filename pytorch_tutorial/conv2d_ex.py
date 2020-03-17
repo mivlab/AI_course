@@ -8,10 +8,10 @@ conv1 = nn.Conv2d(3, 2, 3)
 net = nn.Sequential(conv1)
 conv1.weight.requires_grad_(False)
 conv1.bias.requires_grad_(False)
-# conv1.weight.fill_(0.1)
-# conv1.bias.fill_(0.1)
+conv1.weight.fill_(0.1)
+conv1.bias.fill_(0.1)
 
-# RBG数据，格式为chw, 3x4x4
+# RGB数据，格式为chw, 3x4x4
 data = np.array([[[200, 200, 10, 10],
                    [200, 200, 10, 10],
                    [200, 200, 10, 10],
