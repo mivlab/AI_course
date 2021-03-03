@@ -11,7 +11,7 @@
 
 2. 冠状病毒肺炎X光识别
 
-1）下载数据集
+1）下载数据集  链接：https://pan.baidu.com/s/1XutIOtrt75GoBqq09KP3tw  提取码：nkuw 
 
 2）训练：train_xchest.py 
 
@@ -27,12 +27,12 @@ model = Net112()
 
 Net112是手写字符识别相同的模型。resnet18是残差网络结构，效果更好，但计算量大一些。
 
-3）测试：可以在tes_mnist.py上略作修改。
+3）测试：在tes_mnist.py上略作修改即可，自己实现。
  
 
 常见问题：
 
-1. 肺炎X光识别已经可以训练了，我想知道从手写字符到肺炎X光，需要修改哪些地方？
+1. 手写字符和肺炎X光的训练代码，有哪些地方不同？
 
 答：你可以用文本比较工具（windows下可以装winmerge），比较train_mnist.py 和 train_xchest.py 两个文件，就知道改了哪些地方。
 
