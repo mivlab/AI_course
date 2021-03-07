@@ -23,3 +23,9 @@ cnn.py 二分类网络结构定义
 把这一行cap = cv2.VideoCapture(0)
 改为 cap = cv2.VideoCapture("d:\\20200305.mp4")
 （假设你的视频文件放在d盘根目录下，名字为20200305.mp4，目录分隔符用\\，或写为r"d:\\20200305.mp4"）
+
+
+
+附：人脸口罩数据集
+链接：https://pan.baidu.com/s/1CCYnADFVnsXsBI1JFymsHg 
+提取码：fvkb 
