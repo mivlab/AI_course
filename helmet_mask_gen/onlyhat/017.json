@@ -1,0 +1,43 @@
+{
+  "version": "3.18.0",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "1",
+      "line_color": null,
+      "fill_color": null,
+      "points": [
+        [
+          410.6946107784431,
+          102.99401197604791
+        ],
+        [
+          240.03592814371257,
+          361.67664670658684
+        ],
+        [
+          605.3053892215569,
+          328.7425149700599
+        ]
+      ],
+      "shape_type": "polygon",
+      "flags": {}
+    }
+  ],
+  "lineColor": [
+    0,
+    255,
+    0,
+    128
+  ],
+  "fillColor": [
+    255,
+    0,
+    0,
+    128
+  ],
+  "imagePath": "017.jpg",
+  "imageData": null,
+  "imageHeight": 567,
+  "imageWidth": 850
+}
