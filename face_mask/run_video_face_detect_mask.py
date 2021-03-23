@@ -94,10 +94,10 @@ while True:
         prediction = model(Variable(img_tensor))
         pred = torch.max(prediction, 1)[1].item()
         label = 'face' if pred == 0 else 'mask'
-        cv2.rectangle(orig_image, (box[0], box[1]), (box[2], box[3]), (0, 255, 0), 4)
+        cv2.rectangle(orig_image, (int(box[0]), int(box[1])), (int(box[2]), int(box[3])), (0, 255, 0), 4)
 
         cv2.putText(orig_image, label,
-                    (box[0], box[1] - 10),
+                    (int(box[0]), int(box[1]) - 10),
                     cv2.FONT_HERSHEY_SIMPLEX,
                     2,  # font scale
                     (0, 0, 255),
