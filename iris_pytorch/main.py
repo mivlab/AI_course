@@ -24,48 +24,51 @@ class Net(nn.Module):
         X = self.softmax(X)
 
         return X
-    
-# load IRIS dataset
-dataset = pd.read_csv('dataset/iris.csv')
 
-# transform species to numerics
-dataset.loc[dataset.species=='Iris-setosa', 'species'] = 0
-dataset.loc[dataset.species=='Iris-versicolor', 'species'] = 1
-dataset.loc[dataset.species=='Iris-virginica', 'species'] = 2
+if __name__ == '__main__':
+    # load IRIS dataset
+    dataset = pd.read_csv('dataset/iris.csv')
+
+    # transform species to numerics
+    dataset.loc[dataset.species=='Iris-setosa', 'species'] = 0
+    dataset.loc[dataset.species=='Iris-versicolor', 'species'] = 1
+    dataset.loc[dataset.species=='Iris-virginica', 'species'] = 2
+
+    train_X, test_X, train_y, test_y = train_test_split(dataset[dataset.columns[0:4]].values,
+                                                        dataset.species.values, test_size=0.1)
+
+    # wrap up with Variable in pytorch
+    train_X = Variable(torch.Tensor(train_X).float())
+    test_X = Variable(torch.Tensor(test_X).float())
+    train_y = Variable(torch.Tensor(train_y).long())
+    test_y = Variable(torch.Tensor(test_y).long())
 
 
-train_X, test_X, train_y, test_y = train_test_split(dataset[dataset.columns[0:4]].values,
-                                                    dataset.species.values, test_size=0.8)
+    net = Net()
 
-# wrap up with Variable in pytorch
-train_X = Variable(torch.Tensor(train_X).float())
-test_X = Variable(torch.Tensor(test_X).float())
-train_y = Variable(torch.Tensor(train_y).long())
-test_y = Variable(torch.Tensor(test_y).long())
+    criterion = nn.CrossEntropyLoss()# cross entropy loss
+
+    optimizer = torch.optim.SGD(net.parameters(), lr=0.01)
+
+    for epoch in range(1000):
+        net.train()
+        optimizer.zero_grad()
+        out = net(train_X)
+        _, predict_y = torch.max(out, 1)
+        loss = criterion(out, train_y)
+        loss.backward()
+        optimizer.step()
+
+        if epoch % 100 == 0:
+            print('number of epoch', epoch, 'loss', loss.item(), 'acc ', accuracy_score(train_y.data, predict_y.data))
+
+    net.eval()
+    predict_out = net(test_X)
+    _, predict_y = torch.max(predict_out, 1)
 
 
-net = Net()
+    acc = accuracy_score(test_y.data, predict_y.data)
+    p = precision_score(test_y.data, predict_y.data, average='macro')
+    r = recall_score(test_y.data, predict_y.data, average='macro')
 
-criterion = nn.CrossEntropyLoss()# cross entropy loss
-
-optimizer = torch.optim.SGD(net.parameters(), lr=0.01)
-
-for epoch in range(10000):
-    optimizer.zero_grad()
-    out = net(train_X)
-    loss = criterion(out, train_y)
-    loss.backward()
-    optimizer.step()
-    
-    if epoch % 100 == 0:
-        print('number of epoch', epoch, 'loss', loss.item())
-
-predict_out = net(test_X)
-_, predict_y = torch.max(predict_out, 1)
-
-print('prediction accuracy', accuracy_score(test_y.data, predict_y.data))
-
-print('macro precision', precision_score(test_y.data, predict_y.data, average='macro'))
-print('micro precision', precision_score(test_y.data, predict_y.data, average='micro'))
-print('macro recall', recall_score(test_y.data, predict_y.data, average='macro'))
-print('micro recall', recall_score(test_y.data, predict_y.data, average='micro'))
+    print('accuracy', acc, ',macro precision', p, ',macro recall', r)
