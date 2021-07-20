@@ -43,30 +43,36 @@ def load_data(datapath):
     lines = f.readlines()
     random.shuffle(lines)
     data = np.zeros((len(lines), 3, HEIGHT, WIDTH), dtype=np.float32)
-    label = np.zeros(len(lines), dtype=np.int64)
+    label = np.zeros((len(lines), 1), dtype=np.int64)
     for i, line in enumerate(lines):
         name, label_ = line.strip().split()
         img = load_image(name)
         data[i, :, :, :] = img
-        label[i] = int(label_)
+        label[i,:] = int(label_)
 
     # 训练集和测试集的划分比例
     offset = int(len(lines) * 0.8)
     training_data = data[:offset, :, :, :]
-    training_label = label[:offset]
+    training_label = label[:offset, :]
     test_data = data[offset:, :, :, :]
-    test_label = label[:offset]
+    test_label = label[:offset, :]
     return training_data, training_label, test_data, test_label
 
 class MnistDataset(Dataset):
-    def __init__(self, datapath):
+    def __init__(self, datapath, mode):
         # 样本数量
         self.training_data, self.training_label, self.test_data, self.test_label = load_data(datapath)
-        self.num_samples = self.training_data.shape[0]
+        self.num_samples = self.training_data.shape[0] \
+            if mode == 'train' else self.test_data.shape[0]
+        self.mode = mode
 
     def __getitem__(self, idx):
-        image = self.training_data[idx]
-        label = self.training_label[idx]
+        if self.mode == 'train':
+            image = self.training_data[idx]
+            label = self.training_label[idx]
+        else:
+            image = self.test_data[idx]
+            label = self.test_label[idx]
         return image, label
 
     def __len__(self):
@@ -106,18 +112,18 @@ class Net28(paddle.nn.Layer):
 model = Net28()
 # 开启模型训练模式
 model.train()
-# 加载数据
-training_data, training_label, test_data, test_label = load_data(datapath)
 # 定义优化算法，使用随机梯度下降SGD，学习率设置为0.01
 opt = paddle.optimizer.SGD(learning_rate=0.01, parameters=model.parameters())
 
-EPOCH_NUM = 2  # 设置外层循环次数
+EPOCH_NUM = 1  # 设置外层循环次数
 BATCH_SIZE = 128  # 设置batch大小
 
-train_dataset = MnistDataset(datapath)
+train_dataset = MnistDataset(datapath, 'train')
+test_dataset = MnistDataset(datapath, 'test')
 # 使用paddle.io.DataLoader 定义DataLoader对象用于加载Python生成器产生的数据，
 # DataLoader 返回的是一个批次数据迭代器，并且是异步的；
-data_loader = paddle.io.DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
+data_loader = paddle.io.DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=False)
+test_data_loader = paddle.io.DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=False)
 
 # 定义外层循环
 for epoch_id in range(EPOCH_NUM):
@@ -142,16 +148,27 @@ for epoch_id in range(EPOCH_NUM):
         opt.step()
         # 清除梯度
         opt.clear_grad()
-        start = start + BATCH_SIZE
 
 # 保存模型参数，文件名为LR_model.pdparams
 paddle.save(model.state_dict(), 'LR_model.pdparams')
 print("模型保存成功，模型参数保存在LR_model.pdparams中")
 
+print("开始测试")
+for iter_id, data in enumerate(test_data_loader()):
+    x, y = data
+    # 将numpy数据转为飞桨动态图tensor形式
+    x = paddle.to_tensor(x)
+    y = paddle.to_tensor(y)
+    # 前向计算
+    predicts = model(x)
+    p = F.softmax(predicts)
+    acc = paddle.metric.accuracy(input=p, label=y)
+    if iter_id % 20 == 0:
+        print("iter: {}, accuracy: {}".format(iter_id, acc.numpy()))
+
 
 model.eval()
-img = load_image("1_0_12.jpg")
-#img = load_image("4_00440.jpg")
+img = load_image("4_00440.jpg")
 x = paddle.to_tensor(img)
 predicts = model(x)
 p = predicts.numpy().argmax() # 最大索引
