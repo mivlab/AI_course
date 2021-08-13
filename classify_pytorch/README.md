@@ -1,7 +1,7 @@
 
 1. 手写字符识别
 
-1）下载数据集：https://pan.baidu.com/s/1X-FB-SKUvVvWkXdo_b8SHA, password：mu8h
+1）下载数据集：链接：https://pan.baidu.com/s/18Fz9Cpj0Lf9BC7As8frZrw 提取码：xhgk
 
 2）训练：train_mnist.py
 
