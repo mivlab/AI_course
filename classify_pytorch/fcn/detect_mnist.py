@@ -7,7 +7,7 @@ from train_mnist import Net_fcn
 
 use_cuda = False
 model = Net_fcn()
-model.load_state_dict(torch.load('output/params_1.pth'))
+model.load_state_dict(torch.load('output/params_17.pth'))
 # model = torch.load('output/model.pth')
 model.eval()
 if use_cuda and torch.cuda.is_available():
