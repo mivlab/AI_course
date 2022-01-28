@@ -76,14 +76,16 @@ class Net_seg(nn.Module):
 
 def train():
     os.makedirs('./output', exist_ok=True)
-    train_data = SegDataset(root=r'D:\data\VOCdevkit\VOC2012', file='train.txt', transform=transforms.ToTensor())
-    val_data = SegDataset(root=r'D:\data\VOCdevkit\VOC2012', file='val.txt', transform=transforms.ToTensor())
+    width = 128
+    height = 128
+    train_data = SegDataset(root=r'D:\data\VOCdevkit\VOC2012', file='train.txt', w=width, h=height, transform=transforms.ToTensor())
+    val_data = SegDataset(root=r'D:\data\VOCdevkit\VOC2012', file='val.txt', w=width, h=height, transform=transforms.ToTensor())
     train_loader = DataLoader(dataset=train_data, batch_size=args.batch_size, shuffle=True)
     val_loader = DataLoader(dataset=val_data, batch_size=args.batch_size)
 
     model = Net_seg()
     #model = models.resnet18(num_classes=10)  # 调用内置模型
-    model.load_state_dict(torch.load('./output/params_2.pth'))
+    #model.load_state_dict(torch.load('./output/params_2.pth'))
 
     if args.cuda:
         print('training with cuda')
@@ -103,7 +105,6 @@ def train():
             else:
                 batch_x, batch_y = Variable(batch_x), Variable(batch_y)
             out = model(batch_x)  # 256x3x28x28  out 256x10
-            #out = out.squeeze() #这句重要，调试一下，看squeeze前后有什么变化
             loss = loss_func(out, batch_y)
             train_loss += loss.item()
             pred = torch.max(out, 1)[1]
@@ -111,14 +112,14 @@ def train():
             train_acc += train_correct.item()
             print('epoch: %2d/%d batch %3d/%d  Train Loss: %.3f, Acc: %.3f'
                   % (epoch + 1, args.epochs, batch, math.ceil(len(train_data) / args.batch_size),
-                     loss.item(), train_correct.item() / len(batch_x)))
+                     loss.item(), train_correct.item() / len(batch_x) / (width * height)))
 
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
         scheduler.step()  # 更新learning rate
         print('Train Loss: %.6f, Acc: %.3f' % (train_loss / (math.ceil(len(train_data)/args.batch_size)),
-                                               train_acc / (len(train_data))))
+                                               train_acc / (len(train_data)) / (width * height)))
 
         # evaluation--------------------------------
         model.eval()
@@ -138,7 +139,7 @@ def train():
             num_correct = (pred == batch_y).sum()
             eval_acc += num_correct.item()
         print('Val Loss: %.6f, Acc: %.3f' % (eval_loss / (math.ceil(len(val_data)/args.batch_size)),
-                                             eval_acc / (len(val_data))))
+                                             eval_acc / (len(val_data)) / (width * height)))
         # save model --------------------------------
         if (epoch + 1) % 1 == 0:
             # torch.save(model, 'output/model_' + str(epoch+1) + '.pth')
