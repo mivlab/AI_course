@@ -24,7 +24,7 @@ train = (train - mean) / std
 test = (test - mean) / std
 
 time_steps = 60
-output_steps = 1
+output_steps = 1 # 可以预测一步，或预测多步
 target_index = 0 # 待预测变量是第几个特征
 
 class MyDataset(paddle.io.Dataset):
