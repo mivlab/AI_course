@@ -78,8 +78,8 @@ def train():
     os.makedirs('./output', exist_ok=True)
     width = 128
     height = 128
-    train_data = SegDataset(root=r'D:\data\VOCdevkit\VOC2012', file='train.txt', w=width, h=height, transform=transforms.ToTensor())
-    val_data = SegDataset(root=r'D:\data\VOCdevkit\VOC2012', file='val.txt', w=width, h=height, transform=transforms.ToTensor())
+    train_data = SegDataset(root=r'D:\data\segmentation\VOCdevkit\VOC2012', file='train.txt', w=width, h=height, transform=transforms.ToTensor())
+    val_data = SegDataset(root=r'D:\data\segmentation\VOCdevkit\VOC2012', file='val.txt', w=width, h=height, transform=transforms.ToTensor())
     train_loader = DataLoader(dataset=train_data, batch_size=args.batch_size, shuffle=True)
     val_loader = DataLoader(dataset=val_data, batch_size=args.batch_size)
 
@@ -108,18 +108,18 @@ def train():
             loss = loss_func(out, batch_y)
             train_loss += loss.item()
             pred = torch.max(out, 1)[1]
-            train_correct = (pred == batch_y).sum()
+            train_correct = (pred == batch_y).sum() / (width * height)
             train_acc += train_correct.item()
             print('epoch: %2d/%d batch %3d/%d  Train Loss: %.3f, Acc: %.3f'
                   % (epoch + 1, args.epochs, batch, math.ceil(len(train_data) / args.batch_size),
-                     loss.item(), train_correct.item() / len(batch_x) / (width * height)))
+                     loss.item(), train_correct.item() / len(batch_x)))
 
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
         scheduler.step()  # 更新learning rate
         print('Train Loss: %.6f, Acc: %.3f' % (train_loss / (math.ceil(len(train_data)/args.batch_size)),
-                                               train_acc / (len(train_data)) / (width * height)))
+                                               train_acc / (len(train_data))))
 
         # evaluation--------------------------------
         model.eval()
@@ -136,10 +136,10 @@ def train():
             loss = loss_func(out, batch_y)
             eval_loss += loss.item()
             pred = torch.max(out, 1)[1]
-            num_correct = (pred == batch_y).sum()
+            num_correct = (pred == batch_y).sum() / (width * height)
             eval_acc += num_correct.item()
         print('Val Loss: %.6f, Acc: %.3f' % (eval_loss / (math.ceil(len(val_data)/args.batch_size)),
-                                             eval_acc / (len(val_data)) / (width * height)))
+                                             eval_acc / (len(val_data))))
         # save model --------------------------------
         if (epoch + 1) % 1 == 0:
             # torch.save(model, 'output/model_' + str(epoch+1) + '.pth')
