@@ -85,6 +85,7 @@ class MyLSTMModel(paddle.nn.Layer):
         self.rnn = paddle.nn.LSTM(input_dim, 16, 1)
         self.flatten = paddle.nn.Flatten()
         self.fc1 = paddle.nn.Linear(16 * time_steps, 120) # lstm的输出是隐藏层节点个数乘以时间维度
+        self.relu = paddle.nn.PReLU()
         self.fc2 = paddle.nn.Linear(120, output_steps)
 
     def forward(self, input):  # forward 定义执行实际运行时网络的执行逻辑
@@ -93,6 +94,7 @@ class MyLSTMModel(paddle.nn.Layer):
         out, (h, c) = self.rnn(input)
         out = self.flatten(out)
         out = self.fc1(out)
+        out = self.relu(out)
         out = self.fc2(out)
         return out
 

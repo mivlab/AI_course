@@ -7,7 +7,17 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
 
+# 逻辑回归
+class LogisticRegression(nn.Module):
+    def __init__(self):
+        super(LogisticRegression, self).__init__()
+        self.lr = nn.Linear(4, 3)
 
+    def forward(self, x):
+        x = self.lr(x)
+        return x
+
+# 多层感知机
 class Net(nn.Module):
     # define nn
     def __init__(self):
@@ -19,7 +29,7 @@ class Net(nn.Module):
 
     def forward(self, X):
         X = F.relu(self.fc1(X))
-        X = self.fc2(X)
+        X = F.relu(self.fc2(X))
         X = self.fc3(X)
         X = self.softmax(X)
 
@@ -44,8 +54,8 @@ if __name__ == '__main__':
     test_y = Variable(torch.Tensor(test_y).long())
 
 
-    net = Net()
-
+    net = LogisticRegression()
+    #net = Net()
     criterion = nn.CrossEntropyLoss()# cross entropy loss
 
     optimizer = torch.optim.SGD(net.parameters(), lr=0.01)
