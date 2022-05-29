@@ -92,7 +92,7 @@ class Net64x64(nn.Module):
         self.dense = nn.Sequential(
             nn.Linear(64 * 8 * 8, 128),  # fc4 64*3*3 -> 128
             nn.ReLU(),
-            nn.Linear(128, 2)  # fc5 128->10
+            nn.Linear(128, 3)  # fc5 128->10
         )
 
     def forward(self, x):
