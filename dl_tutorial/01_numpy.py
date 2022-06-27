@@ -1,5 +1,6 @@
 import numpy as np
 
+#分别用python和numpy实现两个矩阵相加
 def matrix_add(m1, m2):
     if len(m1) != len(m2):
         return None
