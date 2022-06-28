@@ -6,8 +6,6 @@ from torchvision import transforms, models
 import argparse
 import os
 from torch.utils.data import DataLoader
-from dataloader import mnist_loader as ml
-from models.cnn import Net
 from torch.utils.data import Dataset
 
 class SexDataset(Dataset):
