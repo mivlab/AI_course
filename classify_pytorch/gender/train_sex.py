@@ -36,6 +36,7 @@ class SexNet(nn.Module):
         return out
 
 def train():
+    os.makedirs('./output', exist_ok=True)
     train_data = SexDataset(txt='sex_train.txt')
     val_data = SexDataset(txt='sex_val.txt')
     batchsize = 10
