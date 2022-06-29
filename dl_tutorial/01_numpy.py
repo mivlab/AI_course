@@ -1,4 +1,5 @@
 import numpy as np
+import torch
 
 #分别用python和numpy实现两个矩阵相加
 def matrix_add(m1, m2):
@@ -24,3 +25,4 @@ if __name__ == '__main__':
     m2 = [[3, 4, 5], [6, 7, 8]]
     print(matrix_add(m1, m2))
     print(matrix_add_np(np.array(m1), np.array(m2)))
+    print(matrix_add_np(torch.Tensor(m1), torch.Tensor(m2)))
