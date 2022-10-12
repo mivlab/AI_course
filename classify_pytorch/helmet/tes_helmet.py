@@ -7,13 +7,13 @@ from toonnx import to_onnx
 
 use_cuda = False
 model = Net64x64()
-model.load_state_dict(torch.load('output/params_1.pth'))
+model.load_state_dict(torch.load('output/params_helmet_21.pth', map_location=torch.device('cpu')))
 # model = torch.load('output/model.pth')
 model.eval()
 if use_cuda and torch.cuda.is_available():
     model.cuda()
 
-to_onnx(model, 3, 64, 64, 'output/params.onnx')
+to_onnx(model, 3, 64, 64, 'output/params_helmet.onnx')
 
 img = cv2.imread('20220516_2_4_0.jpg') #('7_1.jpg')
 img_tensor = transforms.ToTensor()(img)

@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 from torchvision import transforms
-import  numpy as np
+import  numpy_tes as np
 import cv2
 
 conv1 = nn.Conv2d(3, 2, 3)

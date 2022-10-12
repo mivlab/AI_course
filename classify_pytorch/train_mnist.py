@@ -14,8 +14,8 @@ from toonnx import to_onnx
 
 parser = argparse.ArgumentParser(description='PyTorch MNIST Example')
 parser.add_argument('--datapath', required=True, help='data path')
-parser.add_argument('--batch_size', type=int, default=256, help='training batch size')
-parser.add_argument('--epochs', type=int, default=30, help='number of epochs to train')
+parser.add_argument('--batch_size', type=int, default=10, help='training batch size')
+parser.add_argument('--epochs', type=int, default=3000, help='number of epochs to train')
 parser.add_argument('--use_cuda', default=False, help='using CUDA for training')
 
 args = parser.parse_args()
@@ -35,17 +35,18 @@ def train():
     train_loader = DataLoader(dataset=train_data, batch_size=args.batch_size, shuffle=True)
     val_loader = DataLoader(dataset=val_data, batch_size=args.batch_size)
 
-    model = Net()
+    model = Net(10)
+    #model = models.vgg16(num_classes=10)
     #model = models.resnet18(num_classes=10)  # 调用内置模型
     #model.load_state_dict(torch.load('./output/params_10.pth'))
-    #from torchsummary import summary
-    #summary(model, (3, 28, 28))
+    from torchsummary import summary
+    summary(model, (3, 28, 28))
 
     if args.cuda:
         print('training with cuda')
         model.cuda()
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=1e-3)
-    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, [10, 20], 0.1)
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
+    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, [2000, 3000], 0.1)
     loss_func = nn.CrossEntropyLoss()
 
     for epoch in range(args.epochs):
@@ -94,7 +95,7 @@ def train():
         print('Val Loss: %.6f, Acc: %.3f' % (eval_loss / (math.ceil(len(val_data)/args.batch_size)),
                                              eval_acc / (len(val_data))))
         # save model --------------------------------
-        if (epoch + 1) % 1 == 0:
+        if (epoch + 1) % 200 == 0:
             # torch.save(model, 'output/model_' + str(epoch+1) + '.pth')
             torch.save(model.state_dict(), 'output/params_' + str(epoch + 1) + '.pth')
             #to_onnx(model, 3, 28, 28, 'params.onnx')

@@ -46,7 +46,7 @@ def train():
     model = SexNet()
 
     optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=1e-3)
-    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, [10, 20], 0.1)
+    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, [100, 200], 0.1)
     loss_func = nn.CrossEntropyLoss()
 
     epochs = 100

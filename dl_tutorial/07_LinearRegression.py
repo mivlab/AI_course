@@ -2,28 +2,18 @@ from sklearn.datasets import make_regression
 import matplotlib.pyplot as plt
 import numpy as np
 
-X, y= make_regression(n_samples=100, n_features=1, noise=0.4, bias=50)
-
-
-
+# https://github.com/sarvasvkulpati/LinearRegression
+# 或 https://github.com/mivlab/AI_course 下的 dl_tutorial/07_LinearRegression.py
 
 def plotLine(theta0, theta1, X, y):
     max_x = np.max(X) + 100
     min_x = np.min(X) - 100
-
-
     xplot = np.linspace(min_x, max_x, 1000)
     yplot = theta0 + theta1 * xplot
-
-
-
     plt.plot(xplot, yplot, color='#58b970', label='Regression Line')
-
     plt.scatter(X,y)
     plt.axis([-10, 10, 0, 200])
     plt.show()
-
-
 
 def hypothesis(theta0, theta1, x):
     return theta0 + (theta1*x) 
@@ -33,9 +23,6 @@ def cost(theta0, theta1, X, y):
     for (xi, yi) in zip(X, y):
         costValue += 0.5 * ((hypothesis(theta0, theta1, xi) - yi)**2)
     return costValue
-
-
-
 
 def derivatives(theta0, theta1, X, y):
     dtheta0 = 0
@@ -67,9 +54,5 @@ def LinearRegression(X, y):
         # print(cost(theta0, theta1, X, y))
         theta0, theta1 = updateParameters(theta0, theta1, X, y, 0.005)
 
-
-
-    
-
-
+X, y= make_regression(n_samples=100, n_features=1, noise=0.4, bias=50)
 LinearRegression(X, y)

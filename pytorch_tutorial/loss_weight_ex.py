@@ -1,7 +1,7 @@
 
 import torch
 import torch.nn as nn
-import  numpy as np
+import  numpy_tes as np
 
 inputs = torch.FloatTensor([0,1,0,0,0,1])
 outputs = torch.LongTensor([0,1])

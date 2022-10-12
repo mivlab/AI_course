@@ -1,7 +1,7 @@
 
 import torch
 import torch.nn as nn
-import numpy as np
+import numpy_tes as np
 
 data = torch.tensor([1.0, -1.0, -1.0]).unsqueeze(0)
 y = torch.tensor([2])

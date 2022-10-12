@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 from torchvision import transforms
-import  numpy as np
+import  numpy_tes as np
 import cv2
 
 li = nn.Linear(3, 2)

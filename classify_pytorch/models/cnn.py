@@ -2,7 +2,7 @@ import torch.nn as nn
 
 
 class Net(nn.Module):
-    def __init__(self):
+    def __init__(self, c):
         super(Net, self).__init__()
         self.conv1 = nn.Sequential(
             nn.Conv2d(3, 32, 3, 1, 1),  # 32x28x28
@@ -23,7 +23,7 @@ class Net(nn.Module):
         self.dense = nn.Sequential(
             nn.Linear(64 * 3 * 3, 128),  # fc4 64*3*3 -> 128
             nn.ReLU(),
-            nn.Linear(128, 10)  # fc5 128->10
+            nn.Linear(128, c)  # fc5 128->10
         )
 
     def forward(self, x):
