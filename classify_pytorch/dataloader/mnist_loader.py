@@ -46,7 +46,7 @@ class MyDataset(Dataset):
     def __getitem__(self, index):
         fn, label = self.imgs[index]
         img = cv2.imread(fn, cv2.IMREAD_COLOR)
-        img = cv2.resize(img, (28, 28)
+        img = cv2.resize(img, (28, 28))
         if self.transform is not None:
             img = self.transform(img)
         return img, label
