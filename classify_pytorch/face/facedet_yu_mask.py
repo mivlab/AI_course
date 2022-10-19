@@ -62,8 +62,10 @@ while (cap.isOpened()):
     pred = torch.max(prediction, 1)[1].item()
     if pred == 0:
         print('未戴口罩')
+        cv2.putText(img1, 'face', (faces[0, 0], faces[0, 1] - 10), cv2.FONT_HERSHEY_PLAIN, 2.0, (0, 0, 255), thickness = 2)
     else:
         print('戴口罩')
+        cv2.putText(img1, 'mask', (faces[0, 0], faces[0, 1] - 10), cv2.FONT_HERSHEY_PLAIN, 2.0, (0, 0, 255),thickness = 2)
 
     cv2.imshow('img1', img1)
     cv2.waitKey(1)
