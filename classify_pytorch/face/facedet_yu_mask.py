@@ -51,10 +51,12 @@ while (cap.isOpened()):
     faces = faceDetector.detect(img1)
     if faces[1] is None:
         continue
-    faces = faces[1].astype(np.int32)
-    img2 = cv2.resize(img1[faces[0, 0] :faces[0, 0] + faces[0, 2], faces[0, 1]:faces[0, 1] + faces[0, 3], :], (28, 28))
-    cv2.rectangle(img1, (faces[0, 0], faces[0, 1]), (faces[0, 0] + faces[0, 2], faces[0, 1] + faces[0, 3]),
+    faces = faces[1].astype(np.int32)[0]
+    img2 = cv2.resize(img1[faces[0]:faces[0] + faces[2], faces[1]:faces[1] + faces[3], :], (28, 28))
+    cv2.rectangle(img1, (faces[0], faces[1]), (faces[0] + faces[2], faces[1] + faces[3]),
                   (255, 0, 0))
+    for i in range(5):
+        cv2.circle(img1, (faces[4 + i * 2], faces[4 + i * 2 + 1]), 2, (0, 255, 0))
 
     img_tensor = transforms.ToTensor()(img2)
     img_tensor = img_tensor.unsqueeze(0)
@@ -62,10 +64,10 @@ while (cap.isOpened()):
     pred = torch.max(prediction, 1)[1].item()
     if pred == 0:
         print('未戴口罩')
-        cv2.putText(img1, 'face', (faces[0, 0], faces[0, 1] - 10), cv2.FONT_HERSHEY_PLAIN, 2.0, (0, 0, 255), thickness = 2)
+        cv2.putText(img1, 'face', (faces[0], faces[1] - 10), cv2.FONT_HERSHEY_PLAIN, 2.0, (0, 0, 255), thickness = 2)
     else:
         print('戴口罩')
-        cv2.putText(img1, 'mask', (faces[0, 0], faces[0, 1] - 10), cv2.FONT_HERSHEY_PLAIN, 2.0, (0, 0, 255),thickness = 2)
+        cv2.putText(img1, 'mask', (faces[0], faces[1] - 10), cv2.FONT_HERSHEY_PLAIN, 2.0, (0, 0, 255),thickness = 2)
 
     cv2.imshow('img1', img1)
     cv2.waitKey(1)
