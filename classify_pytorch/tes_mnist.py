@@ -7,7 +7,9 @@ from toonnx import to_onnx
 
 use_cuda = False
 model = Net(10)
-model.load_state_dict(torch.load('output/params_1.pth'))
+# 注意：此处应把pth文件改为你训练出来的params_x.pth，x为epoch编号，
+# 一般来讲，编号越大，且训练集（train）和验证集（val）上准确率差别越小的（避免过拟合），效果越好。
+model.load_state_dict(torch.load('output/params_yl.pth'))
 # model = torch.load('output/model.pth')
 model.eval()
 if use_cuda and torch.cuda.is_available():
@@ -15,7 +17,7 @@ if use_cuda and torch.cuda.is_available():
 
 to_onnx(model, 3, 28, 28, 'output/params.onnx')
 
-img = cv2.imread(r'D:\project\AI_course\classify_pytorch\4_00440.jpg')
+img = cv2.imread('4_00440.jpg')
 img = cv2.resize(img, (28, 28))
 img_tensor = transforms.ToTensor()(img)
 img_tensor = img_tensor.unsqueeze(0)

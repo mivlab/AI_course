@@ -14,8 +14,8 @@ from toonnx import to_onnx
 
 parser = argparse.ArgumentParser(description='PyTorch MNIST Example')
 parser.add_argument('--datapath', required=True, help='data path')
-parser.add_argument('--batch_size', type=int, default=128, help='training batch size')
-parser.add_argument('--epochs', type=int, default=3000, help='number of epochs to train')
+parser.add_argument('--batch_size', type=int, default=256, help='training batch size')
+parser.add_argument('--epochs', type=int, default=300, help='number of epochs to train')
 parser.add_argument('--use_cuda', default=False, help='using CUDA for training')
 
 args = parser.parse_args()
@@ -46,7 +46,7 @@ def train():
         print('training with cuda')
         model.cuda()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=1e-3)
-    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, [200, 300], 0.1)
+    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, [20, 30], 0.1)
     loss_func = nn.CrossEntropyLoss()
 
     for epoch in range(args.epochs):
@@ -94,8 +94,8 @@ def train():
             eval_acc += num_correct.item()
         print('Val Loss: %.6f, Acc: %.3f' % (eval_loss / (math.ceil(len(val_data)/args.batch_size)),
                                              eval_acc / (len(val_data))))
-        # save model --------------------------------
-        if (epoch + 1) % 10 == 0:
+        # 保存模型。每隔多少帧存模型，此处可修改------------
+        if (epoch + 1) % 1 == 0:
             # torch.save(model, 'output/model_' + str(epoch+1) + '.pth')
             torch.save(model.state_dict(), 'output/params_' + str(epoch + 1) + '.pth')
             #to_onnx(model, 3, 28, 28, 'params.onnx')
