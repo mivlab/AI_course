@@ -9,7 +9,22 @@
 
 3）测试：tes_mnist.py 可以识别一张新的图片的类别。
 
-2. 冠状病毒肺炎X光识别
+2. 性别识别
+
+给定一个人的身高和体重，预测ta的性别
+代码位于gender目录下，运行train_sex.py 即可完成训练
+gender\gender_with_annotation 目录是注释版代码，感谢许波波提供。
+
+
+3. 人脸检测、人脸未戴口罩识别
+在face目录下。
+
+
+4. 图像分割
+在seg目录下。
+
+
+5. 冠状病毒肺炎X光识别
 
 1）下载数据集  链接：https://pan.baidu.com/s/1XutIOtrt75GoBqq09KP3tw  提取码：nkuw 
 
