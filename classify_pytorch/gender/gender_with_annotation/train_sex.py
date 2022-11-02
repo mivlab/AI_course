@@ -16,7 +16,7 @@ class SexDataset(Dataset):
             words = line.split()
             data.append((float(words[0]) / 2.0, float(words[1]) / 80.0, int(words[2])))
             #取出每行的 身高/2.0 体重/80.0 标签
-            #这个步骤成为归一化，假设人的身高上限2.0，体重上限80，让绝大多数数据在[0,1]之间，有利于训练
+            #这个步骤称为归一化，假设人的身高上限2.0，体重上限80，让绝大多数数据在[0,1]之间，有利于训练
         self.data = data
 
     def __getitem__(self, index):
@@ -68,15 +68,16 @@ def train():
         train_acc = 0
         for batch, (batch_x, batch_y) in enumerate(train_loader):
             batch_x, batch_y = Variable(batch_x), Variable(batch_y)
-            #取出 [身高,体重],男/女 的有效值
+            #取出 [身高,体重],男/女 的标签值
             out = model(batch_x)
             #进入神经网络 计算出分类结果
             loss = loss_func(out, batch_y)
-            #计算损失率  (转化后仍为 tensor() 类型)
+            #计算损失率，用预测值out和标签值batch_y进行比较 (输出仍为 tensor() 类型)
             train_loss += loss.item()
-            #将这个batch的损失率  加入每个 epoch 的总训练损失率当中
+            #将这个batch的损失率  加入每个 epoch 的总训练损失率当中。item()是对tensor类型变量取值，相当于类型转换
             pred = torch.max(out, 1)[1]
             #torch.max返回每个 [身高,体重] 分类结果中最大的值的索引  取出其索引对应的值
+            #要了解torch.max的详细用法，推荐到pytorch官网文档搜索max， https://pytorch.org/docs/stable/index.html
             train_correct = (pred == batch_y).sum()
             #将所有分类结果与标签相同的值相加  (转化后仍为 tensor() 类型)
             train_acc += train_correct.item()
