@@ -1,6 +1,8 @@
 功能：当举起双手到头部以上，做拉弓状，触发一个小球模拟射击。
 
 使用：
-提供了demo.py，是从 lightweight-human-pose-estimation.pytorch-master 代码修改而来，你可以对比一下修改了哪些地方。
+把demo.py，复制到lightweight-human-pose-estimation.pytorch 的目录下，替换原有的即可。
+demo.py 就是从 lightweight-human-pose-estimation.pytorch代码修改而来，
+修改的地方不多，你可以对比一下修改了哪些地方。
 运行的参数是：--checkpoint-path=checkpoint_iter_370000.pth --cpu --video=0
 如果你装了cuda，可以把--cpu去掉。
