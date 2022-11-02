@@ -21,13 +21,13 @@ def shuffle_split(listFile, trainFile, valFile):
         records = f.readlines()
     random.shuffle(records)
     num = len(records)
-    #trainNum = int(num * 1)
-    trainNum = 100
+    trainNum = int(num * 0.8)
+    #trainNum = 100
     with open(trainFile, 'w') as f:
         f.writelines(records[0:trainNum])
     with open(valFile, 'w') as f1:
-        #f1.writelines(records[0:trainNum])
-        f1.writelines(records[trainNum:trainNum + 100])
+        f1.writelines(records[trainNum:])
+        #f1.writelines(records[trainNum:trainNum + 100])
 
 
 class MyDataset(Dataset):
