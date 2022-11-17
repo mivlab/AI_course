@@ -122,10 +122,10 @@ int main(int argc, char* argv[])
                 {
                     for (int n = 0; n < sub.cols; n++)
                     {
-                        // 判断是否为黑色区域，仅当非黑色区域时，才用前景图像素进行覆盖
+                        // 判断是否为白色区域，仅当非白色区域时，才用前景图像素进行覆盖
                         if (psub[m * sub.cols * 3 + n * 3 + 0] +
                             psub[m * sub.cols * 3 + n * 3 + 1] +
-                            psub[m * sub.cols * 3 + n * 3 + 2] > 5 * 3) 
+                            psub[m * sub.cols * 3 + n * 3 + 2] < 250 * 3) 
                         {
                             pimage[(p[5 + 5] + m) * result_image.cols * 3 + (cordX + n) * 3 + 0] = psub[m * sub.cols * 3 + n * 3 + 0];
                             pimage[(p[5 + 5] + m) * result_image.cols * 3 + (cordX + n) * 3 + 1] = psub[m * sub.cols * 3 + n * 3 + 1];
