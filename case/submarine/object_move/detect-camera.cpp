@@ -77,6 +77,10 @@ int main(int argc, char* argv[])
         }
     }
 
+    cv::Mat sub = cv::imread("sub.png"); // 打开潜水艇图
+    cv::resize(sub, sub, cv::Size(64, 64)); // 缩放到合适大小
+    int cordX = 100; // 这是潜水艇放在摄像头画面上的水平坐标
+
     if( cap.isOpened())
     {
         while(true)
@@ -111,6 +115,24 @@ int main(int argc, char* argv[])
                 int w = p[3];
                 int h = p[4];
                 
+                //sub.copyTo(result_image(cv::Rect(cordX, p[5 + 5], sub.cols, sub.rows)));
+                uchar *pimage = result_image.data; // 摄像头画面图像数据的起始地址指针
+                uchar *psub = sub.data;// 潜水艇图像数据的起始地址指针
+                for (int m = 0; m < sub.rows; m++)
+                {
+                    for (int n = 0; n < sub.cols; n++)
+                    {
+                        // 判断是否为黑色区域，仅当非黑色区域时，才用前景图像素进行覆盖
+                        if (psub[m * sub.cols * 3 + n * 3 + 0] +
+                            psub[m * sub.cols * 3 + n * 3 + 1] +
+                            psub[m * sub.cols * 3 + n * 3 + 2] > 5 * 3) 
+                        {
+                            pimage[(p[5 + 5] + m) * result_image.cols * 3 + (cordX + n) * 3 + 0] = psub[m * sub.cols * 3 + n * 3 + 0];
+                            pimage[(p[5 + 5] + m) * result_image.cols * 3 + (cordX + n) * 3 + 1] = psub[m * sub.cols * 3 + n * 3 + 1];
+                            pimage[(p[5 + 5] + m) * result_image.cols * 3 + (cordX + n) * 3 + 2] = psub[m * sub.cols * 3 + n * 3 + 2];
+                        }
+                    }
+                }
                 //show the score of the face. Its range is [0-100]
                 char sScore[256];
                 snprintf(sScore, 256, "%d", confidence);
