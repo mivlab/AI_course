@@ -44,7 +44,7 @@ int main()
 				out += bias[out_c];
 				conv_out.at<float>(i + 1, j + 1) = out; // i,j对应的是卷积核的左上角，它的中心是i+1, j+1
 				// 为每个通道输出一次结果，此2行仅为显示计算结果，可去掉
-				if (i == 0 && j == 0) 
+				if (i == img.rows - 3 && j == img.cols - 3)
 					printf("channel %d %f\n", out_c, out);
 			}
 		}
