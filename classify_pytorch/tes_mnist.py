@@ -15,7 +15,7 @@ model.eval()
 if use_cuda and torch.cuda.is_available():
     model.cuda()
 
-to_onnx(model, 3, 28, 28, 'output/params.onnx')
+#to_onnx(model, 3, 28, 28, 'output/params.onnx')
 
 img = cv2.imread('4_00440.jpg')
 img = cv2.resize(img, (28, 28))
