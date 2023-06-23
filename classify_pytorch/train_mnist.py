@@ -39,8 +39,8 @@ def train():
     #model = models.vgg16(num_classes=10)
     #model = models.resnet18(num_classes=10)  # 调用内置模型
     #model.load_state_dict(torch.load('./output/params_10.pth'))
-    from torchsummary import summary
-    summary(model, (3, 28, 28))
+    #from torchsummary import summary
+    #summary(model, (3, 28, 28))
 
     if args.cuda:
         print('training with cuda')
