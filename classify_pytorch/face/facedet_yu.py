@@ -4,9 +4,8 @@ import cv2
 cap = cv2.VideoCapture(0)
 while (cap.isOpened()):
     ret, img = cap.read()
-    img1 = cv2.resize(img, (320, 320))
-    t1 = cv2.getTickCount()
-    faceDetector = cv2.FaceDetectorYN.create("yunet_yunet_final_320_320_simplify.onnx", "", img1.shape[:2])
+    img1 = img #cv2.resize(img, (320, 320))
+    faceDetector = cv2.FaceDetectorYN.create("face_detection_yunet_2023mar.onnx", "", (img1.shape[1], img1.shape[0]))
     faces = faceDetector.detect(img1)
     if faces[1] is None:
         continue
@@ -16,4 +15,3 @@ while (cap.isOpened()):
     cv2.imshow('img', img1)
     cv2.waitKey(1)
     print(faces)
-    print((cv2.getTickCount() - t1) / cv2.getTickFrequency())
