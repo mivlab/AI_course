@@ -38,38 +38,47 @@ class Net(nn.Module):
         out = self.dense(res)
         return out
 
-model = Net()
-model.load_state_dict(torch.load('params_16.pth'))
-model.eval()
+if __name__ == '__main__':
+    # 加载人脸二分类模型
+    model = Net()
+    model.load_state_dict(torch.load('params_16.pth'))
+    model.eval()
 
-cap = cv2.VideoCapture(0)
-while (cap.isOpened()):
+    # 打开摄像头，创建FaceDetectorYN对象
+    cap = cv2.VideoCapture(0)
     ret, img = cap.read()
-    img1 = img #cv2.resize(img, (320, 320))
-    #t1 = cv2.getTickCount()
-    faceDetector = cv2.FaceDetectorYN.create("face_detection_yunet_2023mar.onnx", "", (img1.shape[1], img1.shape[0]))
-    faces = faceDetector.detect(img1)
-    if faces[1] is None:
-        continue
-    faces = faces[1].astype(np.int32)[0]
-    img2 = cv2.resize(img1[faces[0]:faces[0] + faces[2], faces[1]:faces[1] + faces[3], :], (28, 28))
-    cv2.rectangle(img1, (faces[0], faces[1]), (faces[0] + faces[2], faces[1] + faces[3]),
-                  (255, 0, 0))
-    for i in range(5):
-        cv2.circle(img1, (faces[4 + i * 2], faces[4 + i * 2 + 1]), 2, (0, 255, 0))
+    faceDetector = cv2.FaceDetectorYN.create("face_detection_yunet_2023mar.onnx", "", (img.shape[1], img.shape[0]))
+    num = 0
+    while (cap.isOpened()):
+        ret, img = cap.read()
+        t1 = cv2.getTickCount()
+        faces = faceDetector.detect(img) # 人脸检测
+        if faces[1] is None: #判断是否有人脸
+            cv2.imshow('img', img)
+            cv2.waitKey(1)
+            continue
+        faces = faces[1].astype(np.int32)[0]
+        img2 = cv2.resize(img[faces[1]:faces[1] + faces[3], faces[0]:faces[0] + faces[2], :], (28, 28))
+        cv2.rectangle(img, (faces[0], faces[1]), (faces[0] + faces[2], faces[1] + faces[3]),
+                      (255, 0, 0))
+        for i in range(5):
+            cv2.circle(img, (faces[4 + i * 2], faces[4 + i * 2 + 1]), 2, (0, 255, 0))
 
-    img_tensor = transforms.ToTensor()(img2)
-    img_tensor = img_tensor.unsqueeze(0)
-    prediction = model(Variable(img_tensor))
-    pred = torch.max(prediction, 1)[1].item()
-    if pred == 0:
-        print('未戴口罩')
-        cv2.putText(img1, 'face', (faces[0], faces[1] - 10), cv2.FONT_HERSHEY_PLAIN, 2.0, (0, 0, 255), thickness = 2)
-    else:
-        print('戴口罩')
-        cv2.putText(img1, 'mask', (faces[0], faces[1] - 10), cv2.FONT_HERSHEY_PLAIN, 2.0, (0, 0, 255),thickness = 2)
+        #二分类
+        img_tensor = transforms.ToTensor()(img2)
+        img_tensor = img_tensor.unsqueeze(0)
+        prediction = model(Variable(img_tensor))
+        pred = torch.max(prediction, 1)[1].item()
+        time3 = (cv2.getTickCount() - t1) / cv2.getTickFrequency()
+        if pred == 0:
+            #print('未戴口罩')
+            cv2.putText(img, 'face', (faces[0], faces[1] - 10), cv2.FONT_HERSHEY_PLAIN, 2.0, (0, 0, 255), thickness = 2)
+        else:
+            #print('戴口罩')
+            cv2.putText(img, 'mask', (faces[0], faces[1] - 10), cv2.FONT_HERSHEY_PLAIN, 2.0, (0, 0, 255),thickness = 2)
 
-    cv2.imshow('img1', img1)
-    cv2.waitKey(1)
-    #print(faces)
-    #print((cv2.getTickCount() - t1) / cv2.getTickFrequency())
+        cv2.imshow('img', img)
+        cv2.waitKey(1)
+        print('frame num ', num)
+        num = num + 1
+        #print((cv2.getTickCount() - t1) / cv2.getTickFrequency())
