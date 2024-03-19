@@ -24,6 +24,6 @@ int main()
 	float z = ray1.at<float>(2, 0) / ray1.at<float>(1, 0) * 1.5f;
 	float y = 1.5f;
 	
-	
+	std::cout << x << "," << y << ", " << z << std::endl;
 	// 转换到车体坐标系下，因此前车位于车体坐标系的x = 0.66, y=5.8-1.2处。
 }
